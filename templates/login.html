@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- The above 3 meta tags *must* come first in the head; any other head content must   come *after* these tags -->
+      <title>登陆你的账户</title>
+
+      <!-- Bootstrap -->
+      <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+      <link href="/static/css/bootstrap.css" rel="stylesheet">
+    
+
+      <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+      <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+      <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+      <style type="text/css">
+          body{
+              padding-top: 70px;
+
+          }
+
+          .btn-success{
+            margin-top: 8px;
+            margin-right: 15px;
+            width: 100px;
+          }
+
+          .forget{
+            float: right;
+            margin-right: 80px;
+          }
+
+          .direc_login{
+            margin-top: 30px;
+            margin-bottom: 20px;
+            margin-left: 18%;
+            font-size: 130%;
+            color: #63B8FF;
+          }
+
+          .btn-info{
+            height: 40px;
+          }
+
+          .panel-default{
+              margin-top: 15%;
+          }
+
+          .error{
+            color: red;
+            margin-left: 17%;
+          }
+
+          .alert{
+            position: absolute;
+            width: 70%;
+            margin : auto;
+            z-index: 1;
+            left: 15%;
+          }
+
+      </style>
+    
+    
+    </head>
+    <body>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    </button>
+                    <a class="navbar-brand" href="#">work.me</a>
+                    <form action = "/search/" class="navbar-form navbar-left" role="search" method = "get">
+                        <div class="form-group">
+                              <input type="text" style="width:300px" name = "sea" class="form-control" placeholder="搜索人脉、公司、消息">
+                        </div>
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </form>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                  <li >
+                      <button type="button" class="btn btn-success">注 册</button>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+        </nav>
+        <div id="main_container" class="container">
+            {% if not count %}
+                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Warning!</strong> 您的用户名/密码不匹配
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                          Profile
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-horizontal" action = "/log_in/" method = "POST">
+                                {% csrf_token %}
+                                
+                                <p class="direc_login">已有账号？请直接登录</p>
+                                
+
+                                <div id ="email" class="form-group">
+                                    
+                                    <label for="inputEmail3" class="col-sm-2 control-label"></label>
+                                    <div class="col-sm-10">
+                                          <input type="email" style="width:75%" class="form-control" id="inputEmail3" placeholder=" Username or Email" name = "username">
+                                    </div>
+                                </div>
+                                <div class="form-group" id = "password">
+                                    <label for="inputPassword3" class="col-sm-2 control-label"></label>
+                                    <div class="col-sm-10">
+                                          <input type="password" style="width:75%" class="form-control" id="inputPassword3" placeholder="Password" name = "passwd">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                      
+                                      <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"> 记住我
+                                            </label>
+                                            <a class="forget" href="#">忘记密码？</a>
+                                      </div>
+
+                                      
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                          <button type="submit" style="width:75%" class="btn btn-info">Sign in</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+  
+
+      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+      <script src="/static/js/jquery-1.11.2.min.js"></script>
+      <!-- Include all compiled plugins (below), or include individual files as needed -->
+      <script src="/static/js/bootstrap.min.js"></script>
+    </body>
+</html>
