@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    	<title>加入work.me</title>
+
+    <!-- Bootstrap -->
+    	<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    	<link href="/static/css/bootstrap.css" rel="stylesheet">
+    	<link href="/static/css/jquery.fileupload.css" rel="stylesheet">
+    	<link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
+
+    	<style type="text/css">
+    		body{
+              padding-top: 70px;
+			}
+
+			.container{
+				margin-left: 200px;
+				width: 70%;
+			}
+
+			.btn-info{
+				margin-top: 8px;
+            	margin-right: 15px;
+            	width: 100px;
+			}
+			.btn-success{
+				float: right;
+				width: 100px;
+			}
+
+			.brand{
+				font-size: 19px;
+				color:#5E5E5E;
+			}
+
+			.form-group{
+				margin-top: 20px;
+			}
+
+    	</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+    <div id="nav-container" class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        
+        
+      </button>
+      <a class="navbar-brand" href="#">Work.me</a>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">首页 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">发现</a></li>
+        <li><a href="#">专栏</a></li>
+        <li><a href="#" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">私信</a></li>
+
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+          <li >
+               <button type="button" class="btn btn-info" onclick="javascropt:window.location.href='http://127.0.0.1:8000/login/'">登 录</button>
+          </li>
+      </ul>
+      
+      
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div id="main_container" class="container">
+	<div class="row">
+		<div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                     <h1>加入work.me</h1>
+                     <small class="brand">打造个人互联网品牌</small>
+                     <hr class = "divider">
+                     <h4>快速创建账户</h4>
+                     {% if count1 or count2 %}
+                     	<div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Warning!</strong> 用户名/邮箱已存在
+                		</div>
+                     {% endif %}
+                     <form method="post" action="/join/">
+  
+  <div class="form-group">
+    <label for="exampleInputPassword1">用户名</label>
+    <input name="username" type="" class="form-control" id="exampleInputPassword1" placeholder="Username">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">邮箱</label>
+    <input name="email" type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">密码</label>
+    <input name="passwd" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+  </div>
+    <div class="form-group">
+    <label for="exampleInputPassword1">确认密码</label>
+    <input name="passwd1" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+  </div>
+
+  <hr class="divider"></hr>
+  <p>点击下方"创建账户"的按钮，代表您已同意<a href="">服务条款</a>和<a href="">隐私政策</a>。</p>
+  <hr class="divider"></hr>
+  
+  <button type="submit" class="btn btn-success">创建账户</button>
+</form>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+        	<div class="panel panel-default">
+        	<div class="panel-heading">加入work.me你可以</div>
+                <div class="panel-body">
+                     
+                </div>
+            </div>
+        </div>
+	</div>
+
+</div>
+
+
+		<script src="/static/js/jquery-1.11.2.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    	<script src="/static/js/bootstrap.min.js"></script>
+	</body>
+</html>

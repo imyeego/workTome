@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>{{username}}的信息流</title>
+
+    <!-- Bootstrap -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/jquery.fileupload.css" rel="stylesheet">
+    <link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
+    <style type="text/css">
+      body{
+        margin-top: 70px;
+      }
+      #pic{
+        width: 25px;
+        height: 25px;
+        margin-top: 13px;
+      }
+      .container{
+        width: 75%;
+        margin-left: 10.5%;
+      }
+
+
+      .caret{
+        margin-top: 12px;
+        margin-left: 3px;
+      }
+
+      #main_pic{
+        width: 200px;
+        height: 200px;
+      }
+      #search_pic{
+        width: 80px;
+        height: 80px;
+      }
+
+      #search_name{
+        margin-top: 2px;
+      }
+
+      #search_follow{
+        margin-top: 5px;
+      }
+
+
+    </style>
+
+    <script type="text/javascript">
+          function enbled(){
+            document.getElementById('send').disabled=false;
+          }
+
+          $(function(){
+            $('[data-toggle="popover"]').popover()
+          })
+            
+      }
+    </script>
+    <script src="/static/js/jquery-1.11.2.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">新私信</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="control-label">想给谁发私信</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="control-label">信息</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">发送</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        
+        
+      </button>
+      <a class="navbar-brand" href="#">Work.me</a>
+      <form class="navbar-form navbar-left" role="search" action="/search/">
+        <div class="form-group">
+          <input type="text" name ="keyword" style="width:300px" class="form-control" placeholder="搜索人脉、公司、消息">
+        </div>
+        <button type="submit" class="btn btn-default">搜索</button>
+      </form>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="http://127.0.0.1:8000/index/">首页 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">发现</a></li>
+        <li><a href="#">专栏</a></li>
+        <li><a href="#" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">私信</a></li>
+
+      </ul>
+      
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">消息</a></li>
+        <li class="dropdown">
+          <img src="{{pic}}" id="pic" class="img-rounded dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></img>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="http://127.0.0.1:8000/profile/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> &nbsp&nbsp   主页</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> &nbsp&nbsp     收藏</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> &nbsp&nbsp     私信</a></li>
+            <li class="divider"></li>
+            <li><a href="http://127.0.0.1:8000/setting/"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> &nbsp&nbsp     设置</a></li>
+            <li><a href="http://127.0.0.1:8000/login/"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> &nbsp&nbsp     退出</a></li>
+          </ul>
+        </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+  <div id="main_container" class="container">
+
+    <div class="row">
+      <div class="col-md-3">
+
+        <div class="list-group">
+        <a href="#" id="person-item" class="list-group-item active"><span class="badge">{{per_count}}</span>
+            人脉
+        </a>
+        <a href="#" id="topic-item" class="list-group-item"><span class="badge">{{top_count}}</span>话题</a>
+        <a href="#" id="company-item" class="list-group-item"><span class="badge">{{com_count}}</span>公司</a>
+        <a href="#" id="messen-item" class="list-group-item"><span class="badge">{{mess_count}}</span>信息</a>
+        </div>
+      </div>
+      <script type="text/javascript">
+      $('#topic-item').click(function(){
+        $('.active').removeClass('active');
+        $(this).addClass("active");
+        var box = $('<div class="col-md-9 col-person"><div class="panel panel-default person"><div class="panel-heading">找到了{{top_count}}个话题</div><div class="panel-body"></div></div>');
+        $('.col-person').replaceWith(box);
+      });
+      $('#company-item').click(function(){
+        $('.active').removeClass('active');
+        $(this).addClass("active");
+        var box = $('<div class="col-md-9 col-person"><div class="panel panel-default person"><div class="panel-heading">找到了{{com_count}}个公司</div><div class="panel-body">{%for item in company%}<div class = "row"><div class="col-md-1"><a><img id = "search_pic" class="img-rounded" src="{{item.1}}"></img></a></div><div class = "col-md-10"><h4 id = "search_name" style="margin-left:30px">{{item.0}}</h4><button id = "search_follow" class="btn btn-primary" style="float:right">关注</button></div></div><hr class = "divider">{%endfor%}</div></div>');
+        $('.col-person').replaceWith(box);
+      });
+      $('#person-item').click(function(){
+        $('.active').removeClass('active');
+        $(this).addClass("active");
+        var box = $('<div class="col-md-9 col-person"><div class="panel panel-default person"><div class="panel-heading">找到{{per_count}}个人脉</div><div class="panel-body">{%for item in person%}<div class = "row"><div class="col-md-1"><a><img id = "search_pic" class="img-rounded" src="{{item.0}}"></img></a></div><div class = "col-md-10"><h4 id = "search_name" style="margin-left:30px">{{item.1}}</h4><button id = "search_follow" class="btn btn-primary" style="float:right">关注</button></div></div><hr class = "divider">{%endfor%}</div></div>');
+        $('.col-person').replaceWith(box);
+
+      });
+      $('#messen-item').click(function(){
+        $('.active').removeClass('active');
+        $(this).addClass('active');
+        var box = $('<div class="col-md-9 col-person"><div class="panel panel-default person"><div class="panel-heading">找到{{mess_count}}信息</div><div class="panel-body">{%for item in message%}<div class = "row"><div class = "col-md-10"><p id = "search_name"><strong>{{item.0}}</strong><h style = "color:#565656">&nbsp&nbsp{{item.2}}</h></p><p>{{item.1}}</p></div></div><hr class = "divider" style="margin-top:5px">{%endfor%}</div></div>');
+        $('.col-person').replaceWith(box);
+      });
+
+      </script>
+      
+      <div class="col-md-9 col-person">
+          <div class="panel panel-default person">
+          <div class="panel-heading">找到的人脉</div>
+          <div class="panel-body">
+                {%for item in person%}
+                <div class = "row">
+                <div class="col-md-1">
+                <a>
+                    <img id = "search_pic" class="img-rounded" src="{{item.0}}"></img>
+                </a>
+                </div>
+                <div class = "col-md-10">
+                <h3 id = "search_name" style="margin-left:30px">{{item.1}}</h3>
+                <button id = "search_follow" class="btn btn-primary" style="float:right">关注</button>
+                </div>
+                </div>
+                <hr class="divider">
+                {%endfor%}
+          </div>
+          </div>
+      </div>
+    </div>
+
+
+
+
+
+
+

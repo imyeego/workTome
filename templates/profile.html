@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{username}}的主页</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/jquery.fileupload.css" rel="stylesheet">
+    <link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
+
+    <style type="text/css">
+      body{
+        padding-top: 70px;
+      }
+      #pic{
+        width: 25px;
+        height: 25px;
+        margin-top: 13px;
+      }
+      .caret{
+        margin-top: 12px;
+        margin-left: 3px;
+      }
+      .container{
+      	width: 75%;
+      	margin-left: 10.5%;
+      }
+      #p_pic{
+      	width: 150px;
+      	height: 150px;
+      }
+      .btn-primary{
+      	position: relative;
+      	left: 55%;
+      	
+      }
+      .img-rounded{
+        background-color: #EDEDED;
+        width: 39px;
+        height: 39px;
+        
+      }
+      #followers{
+      	border-left:1px #EDEDED; 
+      }          	
+    </style>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Work.me</a>
+
+				<form class="navbar-form navbar-left" role="search" action="/search/">
+					<div class="form-group">
+						<input type="text" style="width:300px" name = "keyword" class="form-control" placeholder="搜索人脉、公司、消息">
+					</div>
+					<button type="submit" class="btn btn-default">搜索</button>
+				</form>
+			</div>
+
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="http://127.0.0.1:8000/index/">首页 <span class="sr-only">(current)</span></a></li>
+					<li><a href="#">发现</a></li>
+					<li><a href="#">专栏</a></li>
+					<li><a href="#" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">私信</a></li>
+				</ul>
+
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">消息</a></li>
+					<li class="dropdown">
+						<img src="{{pic}}" id="pic" class="img-rounded dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></img>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> &nbsp&nbsp   主页</a></li>
+							<li><a href="#"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> &nbsp&nbsp     收藏</a></li>
+							<li><a href="#"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> &nbsp&nbsp     私信</a></li>
+							<li class="divider"></li>
+							<li><a href="#"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> &nbsp&nbsp     设置</a></li>
+							<li><a href="#"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> &nbsp&nbsp     退出</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	
+	<div id="main_container" class="container">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-4">
+								<a href="http://127.0.0.1:8000/profile/">
+									<img id="p_pic" class="img-rounded" src="{{pic}}">
+								</a>
+							</div>
+							<div class="col-md-8">
+								<h3>{{username}}{% if result.0.3 %}
+								<small>女</small>
+								{% endif %}</h3>
+								<p>{{result.0.7}} |{{result.0.8}}</p>
+								<p>{{result.0.9}}|{{result.0.10}}</p>
+								<p>{{result.0.12}}|{{result.0.13}}</p>
+								<hr class="divider">
+								<p>{{result.0.11}}</p>
+							</div>
+						</div>					
+					</div>
+					<div class="panel-footer"><a href="http://127.0.0.1:8000/profile/">http://127.0.0.1:8000/profile/</a>
+					<button type="submit" class="btn btn-primary btn-sm">
+					<span class="glyphicon glyphicon-edit" aria-hidden="true" disabled=""></span>编辑
+					</button>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">个人动态</div>
+					<div class="panel-body">
+						{% for item in messages %}
+							<div class="pers_messens">
+								<div class = "row" id = "messenge_content">
+									<div class = "col-md-1">
+										<a href="#">
+											<img class="img-rounded" src="{{pic}}">
+										</a>
+									</div>
+									<div class = "col-md-11">
+										<p>
+											<strong class = "username">{{item.1}}</strong>
+											<h class = "time">{{item.8}}</h>
+										</p>
+										<p>
+											{{item.2}}
+										</p>
+									</div>
+								</div>
+								<hr class="divider">
+							</div>
+						{% endfor %}
+					</div>		
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">工作经历</div>
+					<div class="panel-body">
+						{% for item in workexprences %}
+							<p><strong>{{item.4}}</strong></p>
+							<p><a href="">{{ item.3 }}</a></p>
+							<p>从{{ item.1 }}到{{ item.2 }}</p>
+							<hr class="divider">
+						{% endfor %}
+					</div>		
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">教育经历</div>
+					<div class="panel-body">
+						{% for item in eduexprences %}
+							<p><strong>{{ item.4 }}</strong> {{item.6}}</p>
+							<p><a href="">{{ item.3 }}</a></p>
+							<p>从{{ item.1 }}到{{ item.2 }}</p>
+							<hr class="divider">
+						{% endfor %}
+					</div>		
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">联系方式</div>
+					<div class="panel-body">
+						技能专长	
+					</div>		
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="people">
+							<div class="row">
+								<div id="followings" class = "col-md-5">
+									<p>正在关注</p>
+									<p><a href="">{{followings}}</a></p>
+								</div>
+								<div d="followers" class = "col-md-7">
+									<p>关注者</p>
+									<p><a href="">{{followers}}</a></p>
+								</div>
+							</div>
+							<hr class="divider" style="margin-top:5px;">
+						</div>
+						<div class="company">
+							<p>关注了<a href="">{{companis}}个公司</a></p>
+							<hr class="divider">
+						</div>
+						<div class="topics">
+							<p>关注了<a href="">{{companis}}个话题</a></p>
+							<hr class="divider">
+						</div>
+						<div>
+							<p style="color:#ABABAB">您的主页被20人浏览过</p>
+							<hr class="divider">
+						</div>
+						<div>
+							<p style="color:#ABABAB">关于work.me●反馈建议●加入我们</p>
+							<p style="color:#ABABAB">协议●商务合作●©2015work.me</p>
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
+
+	<script src="/static/js/jquery-1.11.2.min.js"></script>
+	<script src="/static/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+
+	</script>
+</body>
+</html>

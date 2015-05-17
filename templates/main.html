@@ -10,7 +10,8 @@
     <!-- Bootstrap -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/bootstrap.css" rel="stylesheet">
-    
+    <link href="/static/css/jquery.fileupload.css" rel="stylesheet">
+    <link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -80,34 +81,40 @@
 
       }
 
-      #messenge_panel{
+      .messenge_panel{
 
         padding-bottom: 5px;
       }
       .divider{
-
+        margin-top: 5px;
         margin-bottom: 5px;
       }
-      #btn_small_fav,#btn_small_comm ,#btn_small_re ,#btn_small_like{
+      .btn_small_fav,.btn_small_comm ,.btn_small_re ,.btn_small_like{
           border: 0px;
       }
 
-      #btn_small_fav:hover{
+      .btn_small_fav:hover{
           background-color: white;
           color: #388E8E;
       }
 
-      #btn_small_comm:hover{
+      .btn_small_comm:hover{
           background-color: white;
           color: #EEC900
       }
-      #btn_small_re:hover{
+      .btn_small_re:hover{
           background-color: white;
           color: #DC143C
       }
-      #btn_small_like:hover{
+      .btn_small_like:hover{
           background-color: white;
           color: #63B8FF;
+      }
+
+      .upload{
+        width: 180px;
+        height: 50px;
+        outline: none;
       }
 
 
@@ -118,15 +125,40 @@
       .time{
         color: #ABABAB;
       }
+      .option_comment{
+        margin-top: 10px;
+      }
+
+      #pic{
+        width: 25px;
+        height: 25px;
+        margin-top: 13px;
+      }
+
+      .caret{
+        margin-top: 12px;
+        margin-left: 3px;
+      }
+
+      #main_pic{
+        width: 200px;
+        height: 200px;
+      }
 
     </style>
     <script type="text/javascript">
           function enbled(){
             document.getElementById('send').disabled=false;
           }
+
+          $(function(){
+            $('[data-toggle="popover"]').popover()
+          })
             
       }
     </script>
+    <script src="/static/js/jquery-1.11.2.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
   </head>
   <body>
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -134,23 +166,23 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+        <h4 class="modal-title" id="exampleModalLabel">新私信</h4>
       </div>
       <div class="modal-body">
         <form>
           <div class="form-group">
-            <label for="recipient-name" class="control-label">Recipient:</label>
+            <label for="recipient-name" class="control-label">想给谁发私信</label>
             <input type="text" class="form-control" id="recipient-name">
           </div>
           <div class="form-group">
-            <label for="message-text" class="control-label">Message:</label>
+            <label for="message-text" class="control-label">信息</label>
             <textarea class="form-control" id="message-text"></textarea>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Send message</button>
+        <button type="button" class="btn btn-primary">发送</button>
       </div>
     </div>
   </div>
@@ -167,9 +199,9 @@
         
       </button>
       <a class="navbar-brand" href="#">Work.me</a>
-      <form class="navbar-form navbar-left" role="search">
+      <form class="navbar-form navbar-left" role="search" action="/search/">
         <div class="form-group">
-          <input type="text" style="width:300px" class="form-control" placeholder="搜索人脉、公司、消息">
+          <input type="text" name ="keyword" style="width:300px" class="form-control" placeholder="搜索人脉、公司、消息">
         </div>
         <button type="submit" class="btn btn-default">搜索</button>
       </form>
@@ -179,6 +211,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       
       <ul class="nav navbar-nav">
+      </li>
         <li class="active"><a href="#">首页 <span class="sr-only">(current)</span></a></li>
         <li><a href="#">发现</a></li>
         <li><a href="#">专栏</a></li>
@@ -189,17 +222,16 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#">消息</a></li>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ username }} <span class="caret"></span></a>
+          <img src="{{pic}}" id="pic" class="img-rounded dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></img>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="#"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> &nbsp&nbsp   主页</a></li>
+            <li><a href="http://127.0.0.1:8000/profile/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> &nbsp&nbsp   主页</a></li>
             <li><a href="#"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> &nbsp&nbsp     收藏</a></li>
             <li><a href="#"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> &nbsp&nbsp     私信</a></li>
             <li class="divider"></li>
-            <li><a href="#"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> &nbsp&nbsp     设置</a></li>
-            <li><a href="#"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> &nbsp&nbsp     退出</a></li>
+            <li><a href="http://127.0.0.1:8000/setting/"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> &nbsp&nbsp     设置</a></li>
+            <li><a href="http://127.0.0.1:8000/login/"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> &nbsp&nbsp     退出</a></li>
           </ul>
-        </li>
-      </ul>
+        </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
@@ -210,12 +242,38 @@
       <div class="col-md-3">
           <div class="panel panel-default">
             <div class="panel-body">
-                  Profile
+                  <a href="http://127.0.0.1:8000/profile/">
+                    <img id = "main_pic" class="img-rounded" src="{{pic}}">
+                  </a>
+                  <div class="row">
+                <div id="followings" class = "col-md-4">
+                  <p>正在关注</p>
+                  <p><a href="">{{followings}}</a></p>
+                </div>
+                <div d="followers" class = "col-md-4">
+                  <p>关注者</p>
+                  <p><a href="">{{followers}}</a></p>
+                </div>
+                <div d="followers" class = "col-md-4">
+                  <p>已发消息</p>
+                  <p><a href="">{{messenages}}</a></p>
+                </div>
+
+                    
+                  </div>
             </div>
           </div>
           <div class="panel panel-default">
+          <div class="panel-heading">热门</div>
             <div class="panel-body">
-                  Trends
+                {% for item in topics %}
+                <div>
+                  <p><a href=""><strong>{{ item.0 }}</strong></a></p>
+                  
+
+                  <hr class="divider">
+                </div>
+                {% endfor %}
             </div>
           </div>
 
@@ -229,19 +287,22 @@
               <div class="row">
               <div class = "col-md-1">
                   <a href="#">
-                      <img class="img-rounded" src="">
+                      <img class="img-rounded" src="{{pic}}">
                   </a>
               </div>
               <div class = "col-md-11">
-                <form action = "/send_messenge/" method = "POST">
-                    <textarea id="content" name = "content" class="form-control" rows="3" placeholder="想说点儿什么？" oninput="enbled()"></textarea>
+                <form action = "/send_messenge/" method = "POST" enctype="multipart/form-data">
+                    <textarea id="content" name = "content" class="form-control" rows="3"   placeholder="想说点儿什么？"></textarea>
+                    <span id="photo" class="btn btn-default fileinput-button">
+                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                            <span>上传图片</span>
+                                  <input type="file" id="upload_image" data-url="/upload/" name="up_image" multiple>
+                        </span>
                 
-                <button type="button" id="map_marker" class="btn btn-default"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
-                  &nbsp添加位置</button>
-                <button type="button" id="photo" class="btn btn-default"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
-                  &nbsp添加照片</button>
-                <button type="submit" id="send" class="btn btn-primary">
-                  <span class="glyphicon glyphicon-edit" aria-hidden="true" disabled=""></span>&nbsp&nbsp发布信息</button>
+                
+                    <button type="submit" id="send" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true" disabled=""></span>&nbsp&nbsp发布信息
+                    </button>
 
                 </form>
                 
@@ -252,7 +313,7 @@
           </div>
           {% for item in result %}
           <div class="panel panel-default">
-            <div class="panel-body" id = "messenge_panel">
+            <div class="panel-body messenge_panel" id = "messenge_panel{{item.0}}">
               <div class = "row" id = "messenge_content">
                   <div class = "col-md-1">
                       <a href="#">
@@ -262,13 +323,17 @@
                   <div class = "col-md-11">
                       <p>
                           <strong class = "username">{{item.1}}</strong>
-                          <h class = "time">{{item.3}}</h>
+                          <h class = "time{{item.8}}">{{item.8}}</h>
                       </p>
                       <p>
-                          {{item.4}}
-                      </p>  
-
-                      
+                          {{item.2}}
+                      </p>
+                      {% if item.3 %}  
+                        <p>
+                          <img style="width:80%" src="{{item.5}}">
+                        </p>
+                        
+                      {% endif %}
                   </div>
 
 
@@ -276,22 +341,64 @@
               <hr class = "divider">
               <div class = "options">
 
-                <div class = "raw">
+                <div class = "row">
                     <div class = "col-md-2">
-                        <button type="button" id = "btn_small_fav" class="btn btn-default btn-sm">收藏</button>
+                        <button type="button" id = "btn_small_fav{{item.0}}" class="btn btn-default btn-sm btn_small_fav">收藏&nbsp&nbsp<span id="fav{{item.0}}">{{item.4}}</button>
                     </div>
                     <div class = "col-md-2">
-                        <button type="button" id = "btn_small_comm" class="btn btn-default btn-sm">评论</button>
+                        <button type="button" id = "btn_small_comm{{item.0}}" class="btn btn-default btn-sm btn_small_comm">评论&nbsp&nbsp<span id="fav{{item.0}}">{{item.5}}</button>
                     </div>
                     <div class = "col-md-2">
-                        <button type="button" id = "btn_small_re" class="btn btn-default btn-sm">转发</button>
+                        <button type="button" id = "btn_small_re{{item.0}}" class="btn btn-default btn-sm btn_small_re">转发&nbsp&nbsp<span id="fav{{item.0}}">{{item.6}}</button>
                     </div>
                     <div class = "col-md-2">
-                        <button type="button" id = "btn_small_like" class="btn btn-default btn-sm">赞一个</button>
+                        <button type="button" id = "btn_small_like{{item.0}}" class="btn btn-default btn-sm btn_small_like">赞一个&nbsp&nbsp<span id="like{{item.0}}">{{item.7}}</span></button>
                     </div>
                 </div>
                   
               </div>
+
+              <div id="box"></div>
+          <script type="text/javascript">
+          $('#btn_small_fav{{item.0}}').click(function(){
+              
+              $('#btn_small_fav{{item.0}}').text("已收藏");
+              $('#btn_small_fav{{item.0}}').css("color","#388E8E");
+              //$('#btn_small_fav{{item.0}}').attr("disabled":"disabled");
+              
+          });
+          </script>
+          <script type="text/javascript">
+          $('#btn_small_comm{{item.0}}').click(function(){
+              var box = $('<div class="option_comment"><div class="row"><div class="col-md-1"><a href="#"><img class="img-rounded" src="{{pic}}"></a></div><div class="col-md-11"><form action="/send_comment/" method="POST"><textarea id="content" name = "content" class="form-control" rows="1"   placeholder="想说点儿什么？"></textarea><button type="submit" id="send" class="btn btn-primary btn-sm">评论</button></form></div></div></div>');
+              $('#messenge_panel{{item.0}}').append(box);
+            });
+
+          </script>
+          <script type="text/javascript">
+          $('#btn_small_like{{item.0}}').click(function(){
+              $.post('/like/',{mid:{{item.0}}},function(){
+              var count = $('#like{{item.0}}').text();
+              var count1 = Number(count);
+              count1 +=1;
+              $('#like{{item.0}}').text(count1.toString());
+              $('#like{{item.0}}').css("color","#63B8FF");
+              $('#btn_small_like{{item.0}}').css("color","#63B8FF");
+              //$('#btn_small_like{{item.0}}').attr("disabled":"disabled");
+              //$('#btn_small_like{{item.0}}').text("已赞"+$('#like{{item.0}}').text());
+              });
+          });
+          </script>
+          <script type="text/javascript">
+              function getLocalTime(ns){
+                return new Date(parseInt(ns)*1000).toLocaleString().replace(/:\d{1,2}$/,'').replace(/年|月/g, "-").replace(/日/, " ").replace("GMT+8"," ");
+              }
+              var time = getLocalTime($('.time{{item.8}}').text());
+              $('.time{{item.8}}').text(time);
+          </script>
+
+
+              
             </div>
           </div>
 
@@ -303,11 +410,38 @@
       </div>
       <div class="col-md-3">
           <div class="panel panel-default">
+          <div class="panel-heading">可能感兴趣的人</div>
             <div class="panel-body">
-                Related People
+                {% for item in recommends %}
+                <div class = "row" style="padding-top:5px">
+                  <div class="col-md-2">
+                    <a href="">
+                      <img class = "img-rounded" src="" style="width:60px,height:60px">
+                    </a>
+                  </div>
+                  <div class="col-md-10">
+                    <p style="margin-top:-3px"><strong>{{item.1}}</strong></p>
+                    <button id ="follow{{item.0}}" class="btn btn-primary btn-xs">
+                      建立联系
+                    </button>
+                  </div>
+                  
+                </div>
+                <script type="text/javascript">
+                  $('#follow{{item.0}}').click(function(){
+                    $.post('/follow/',{user_name:{{item.0}}},function(){
+                        $('#follow{{item.0}}').text("已建立联系");
+                        $('#follow{{item.0}}').attr("disabled","disabled");
+                    });
+                  });
+                </script>
+                <hr class="divider">
+                {% endfor %}
+                <a style="margin-top:5px" href="">查看更多推荐</a>
             </div>
           </div>
           <div class="panel panel-default">
+          <div class="panel-heading">推荐信息</div>
             <div class="panel-body">
                 Ads
             </div>
@@ -320,10 +454,12 @@
 
     </div>
   <div>
-
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="/static/js/jquery-1.11.2.min.js"></script>
+    
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="/static/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+  
+  </script>
+
   </body>
 </html>
