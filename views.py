@@ -55,7 +55,11 @@ def index(request):
 		recommends = getrecommends(username)
 		followings = getfollowings(username)
 		followers = getfollowers(username)
-		messenages = getmessenages(username)
+		messenages = getmessenages(username)+1
+		cur_time = int(time.time())
+
+		for item in result:
+			write_mess_log(item[0],username,cur_time)
 
 		return render_to_response('main.html',{'messenages':messenages,'followers':followers,'followings':followings,'recommends':recommends,'topics':topics,'pic': pic[0][0],'result': result,'username':username},context_instance=RequestContext(request))
 	else:

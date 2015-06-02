@@ -423,6 +423,19 @@ def search_mess(val):
 	except Exception, e:
 		raise e
 
+def write_mess_log(val1,val2,val3):
+	sql = "insert into messen_id values("+str(val1)+",'"+val2+"',"+str(val3)+")"
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306)
+		cur = conn.cursor()
+		cur.execute(sql)
+		conn.commit()
+		result = cur.fetchall()
+		cur.close()
+		conn.close()
+	except Exception, e:
+		raise e
 
 
 
