@@ -169,7 +169,17 @@ def search(request):
 		mess_count,message = search_mess(keyword)
 
 		t = get_template('search.html')
-		c = Context({'per_count':per_count,'com_count':com_count,'top_count':top_count,'mess_count':mess_count,'person':person,'company':company,'topic':topic,'message':message})
+		c = Context({'keyword':keyword,'pic':pic[0][0],'per_count':per_count,'com_count':com_count,'top_count':top_count,'mess_count':mess_count,'person':person,'company':company,'topic':topic,'message':message})
+		return HttpResponse(t.render(c))
+	else:
+		return HttpResponseRedirect('/login/')
+
+def setting(request):
+	username = request.COOKIES.get('username','')
+	if username:
+		pic = get_user_pic(username)
+		t = get_template('settings.html')
+		c = Context({'pic':pic[0][0],'username':username})
 		return HttpResponse(t.render(c))
 	else:
 		return HttpResponseRedirect('/login/')

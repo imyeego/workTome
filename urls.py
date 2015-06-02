@@ -29,5 +29,6 @@ urlpatterns = patterns('',
     ('^like/$',like),
     ('^follow/$',follow),
     ('^search/$',search),
+    ('^setting/$',setting),
     #('^send_comment/$',send_comment),
 )
