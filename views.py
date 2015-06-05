@@ -188,7 +188,25 @@ def setting(request):
 	else:
 		return HttpResponseRedirect('/login/')
 	 
-			
+def getNewMess(request):
+	username = request.GET['username']
+	if username:
+		count_newmess = getnewmess(username)
+		t = get_template('main.html')
+		c = Context({'count_newmess',count_newmess})
+		return HttpResponse(t.render(c))
+	else:
+		return HttpResponseRedirect('/login/')
+
+def current_time(request):
+	username = request.COOKIES.get('username','')
+	if username:
+
+		t = get_template('current_datetime.html')
+		html = t.render(Context({'current_date' : time.time(),'username':username}))
+		return HttpResponse(html)
+	else:
+		 return HttpResponseRedirect('/login/')
 		
 
 

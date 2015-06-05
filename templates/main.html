@@ -146,19 +146,27 @@
       }
 
     </style>
-    <script type="text/javascript">
-          function enbled(){
-            document.getElementById('send').disabled=false;
-          }
-
-          $(function(){
-            $('[data-toggle="popover"]').popover()
-          })
-            
-      }
-    </script>
+    
     <script src="/static/js/jquery-1.11.2.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+          $(function(){
+                timeid = window.setInterval("getNewMess()",3000);
+          });
+          function getNewMess(){
+              $.post('/getNewMess/',{username:{{username}}},function(){
+              var newmess={{count_newmess}};
+              newmess1 = Number(newmess);
+              if (newmess1>0) {
+                  var box = $('<div class="alert alert-info" role="alert">您有{{count_newmess}}条新信息，<a href="#" class="alert-link">点击这里加载</a></div>');
+                  $('#send_messenger').append(box);                     
+              }
+
+              });  
+          }
+            
+      
+    </script>
   </head>
   <body>
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -282,7 +290,7 @@
         <div class="container-fluid">
           <div class="row">
           
-          <div class="panel panel-default">
+          <div id="send_messenger" class="panel panel-default">
             <div class="panel-body">
               <div class="row">
               <div class = "col-md-1">
@@ -311,6 +319,24 @@
               </div>  
             </div>
           </div>
+          <script type="text/javascript">
+          
+           var timeid = window.setInterval("getNewMess()",3000);
+          
+          function getNewMess(){
+              $.get('/getNewMess/',{username:'{{username}}'},function(){
+              var newmess=Number({{count_newmess}});
+              
+              if (newmess>0) {
+                  var box = $('<div class="alert alert-info" role="alert">您有{{count_newmess}}条新信息，<a href="#" class="alert-link">点击这里加载</a></div>');
+                  $('#send_messenger').append(box);                     
+              }
+
+              });  
+          }
+            
+      
+    </script>
           {% for item in result %}
           <div class="panel panel-default">
             <div class="panel-body messenge_panel" id = "messenge_panel{{item.0}}">

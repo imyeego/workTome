@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 	<head>
-		<title>时间</title>
+		<title>时间{{username}}</title>
 		<meta charset="utf-8">
 
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,6 +9,19 @@
 
 		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
 		<link href="/static/css/bootstrap.css" rel="stylesheet">
+		<script src="/static/js/jquery-1.11.2.min.js"></script>
+    	<!-- Include all compiled plugins (below), or include individual files as needed -->
+    	<script src="/static/js/bootstrap.min.js"></script>
+    	<script type="text/javascript">
+    		$(function(){
+    			window.setInterval(function(){
+    				$.get('/getNewMess/',{username:'{{username}}'},function(){
+    					alert(Number({{count_newmess}}));
+    				});
+    			},3000);
+    		});
+    	</script>
+
 	</head>
 	<body>
 		<form class="navbar-form navbar-left" role="search">
@@ -24,8 +37,5 @@
 
 
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    	<script src="/static/js/jquery-1.11.2.min.js"></script>
-    	<!-- Include all compiled plugins (below), or include individual files as needed -->
-    	<script src="/static/js/bootstrap.min.js"></script>
 	</body>
 </html>

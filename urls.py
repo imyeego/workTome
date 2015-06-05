@@ -30,5 +30,7 @@ urlpatterns = patterns('',
     ('^follow/$',follow),
     ('^search/$',search),
     ('^setting/$',setting),
+    ('^getNewMess/$',getNewMess),
+    ('^current_time/$',current_time),
     #('^send_comment/$',send_comment),
 )

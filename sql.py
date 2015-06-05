@@ -424,7 +424,7 @@ def search_mess(val):
 		raise e
 
 def write_mess_log(val1,val2,val3):
-	sql = "insert into messen_id values("+str(val1)+",'"+val2+"',"+str(val3)+")"
+	sql = "insert into messen_log values(default,"+str(val1)+",'"+val2+"',"+str(val3)+")"
 	try:
 		conn = MySQLdb.connect(host = 'localhost',user = 'root',
 			passwd = 'root', db = 'work2me',port = 3306)
@@ -436,6 +436,20 @@ def write_mess_log(val1,val2,val3):
 		conn.close()
 	except Exception, e:
 		raise e
+
+def getnewmess(val):
+	sql = "select count(mid) from messen_log where reader!='"+val+"' and mid = any(select mid from messengers where hoster=any(select hosteduser from friends where hostuser='"+val+"'))"
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306)
+		cur = conn.cursor()
+		result=cur.execute(sql)
+		
+		cur.close()
+		conn.close()
+		return result
+	except MySQLdb.Error, e:
+		print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 
 
 
