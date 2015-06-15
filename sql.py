@@ -26,7 +26,7 @@ def toUsername(val1, val2):
 def send_mess(val1, val2, val3, val4):
 	try:
 		
-		sql = "insert into messengers values (default,'" + val1 + "', '" + val2 + "','/static/images/"+ val3 +"',default,default,default,default,"+str(val4)+")"
+		sql = "insert into messengers values (default,'" + val1 + "', '" + val2 + "','/static/images/"+ val3 +"',default,default,default,default,"+str(val4)+",default)"
 		conn = MySQLdb.connect(host = 'localhost',user = 'root',
 			passwd = 'root', db = 'work2me',port = 3306)
 		cur = conn.cursor()
@@ -451,6 +451,149 @@ def getnewmess(val):
 	except MySQLdb.Error, e:
 		print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 
+def updatebasic(val,val1,val2,val3):
+	sql = "update users set cur_work ='"+val1+"',address ='"+val2+"',sign='"+val3+"' where username ='"+val+"'"
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306)
+		cur = conn.cursor()
+		cur.execute(sql)
+		conn.commit()
+		result = cur.fetchall()
+		cur.close()
+		conn.close()
+	except MySQLdb.Error, e:
+		print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+
+def updatebasicByPic(val,val1):
+	sql = "update users set picture = '/static/images/"+val1+"' where username ='"+val+"'"
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306)
+		cur = conn.cursor()
+		cur.execute(sql)
+		conn.commit()
+		result = cur.fetchall()
+		cur.close()
+		conn.close()
+	except Exception, e:
+		raise e
+
+def new_dire_messen(val,val1,val2,val3):
+	sql = "insert into direct_messen values(default,'"+val+"','"+val1+"','"+val2+"',"+str(val3)+",default)"
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306) #与数据库建立连接
+		cur = conn.cursor() #定义游标
+		cur.execute(sql) #执行sql语句
+		conn.commit() #保存
+		result = cur.fetchall() 
+		cur.close()
+		conn.close()
+	except Exception, e:
+		raise e
+
+def getnewdirect_messen(val):
+	sql = "select * from direct_messen where sender like '%"+val+"%' or receiver like '%"+val+"%' order by send_time DESC"
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306)
+		cur = conn.cursor()
+		cur.execute(sql)
+		conn.commit()
+		result = cur.fetchall()
+		cur.close()
+		conn.close()
+		return result
+	except Exception, e:
+		raise e
+
+def readedById(val):
+	sql = "update direct_messen set state='1' where meid = "+val+""
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306)
+		cur = conn.cursor()
+		cur.execute(sql)
+		conn.commit()
+		result = cur.fetchall()
+		cur.close()
+		conn.close()
+	except MySQLdb.Error, e:
+		print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+
+def getUnreadByUname(val):
+	sql = "select count(meid) from direct_messen where state = '0' and (sender ='"+val+"' or receiver ='"+val+"')"
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306)
+		cur = conn.cursor()
+		count = cur.execute(sql)
+		conn.commit()
+		result = cur.fetchall()
+		cur.close()
+		conn.close()
+		return count
+	except MySQLdb.Error, e:
+		print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+
+def getfollowingsByDetails(val):
+	sql = "select * from friends where hostuser = '" +val+ "'"
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306)
+		cur = conn.cursor()
+		count = cur.execute(sql)
+		
+		result = cur.fetchall()
+		cur.close()
+		conn.close()
+		return result
+	except MySQLdb.Error, e:
+		print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+
+def getfollowersByDetails(val):
+	sql = "select * from friends where hosteduser = '" +val+ "'"
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306)
+		cur = conn.cursor()
+		count = cur.execute(sql)
+		
+		result = cur.fetchall()
+		cur.close()
+		conn.close()
+		return result
+	except MySQLdb.Error, e:
+		print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+
+def delfrid(val):
+	sql = "delete from friends where fri_id ="+str(val)+""
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306)
+		cur = conn.cursor()
+		count = cur.execute(sql)
+		conn.commit()
+		result = cur.fetchall()
+		cur.close()
+		conn.close()
+	except MySQLdb.Error, e:
+		print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+
+def insert_star(val1,val2,val3):
+	sql =""
+	try:
+		conn = MySQLdb.connect(host = 'localhost',user = 'root',
+			passwd = 'root', db = 'work2me',port = 3306)
+		cur = conn.cursor()
+		count = cur.execute(sql)
+		conn.commit()
+		result = cur.fetchall()
+		cur.close()
+		conn.close()
+	except Exception, e:
+		raise e
 
 
 

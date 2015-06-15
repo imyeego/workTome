@@ -20,7 +20,11 @@
         width: 25px;
         height: 25px;
         margin-top: 13px;
-      }
+        }
+        #picture{
+          width: 100px;
+          height: 100px;
+        }
       .container{
         width: 75%;
         margin-left: 10.5%;
@@ -42,10 +46,63 @@
 		-webkit-border-top-left-radius: 0px;
 		-webkit-border-top-left-radius: 0px;
       }
+      #tags{
+        height: 200px;
+        background-color: #F7F7F7;
+        text-align: center;
+        padding-top: 60px;
+        font-size: 130%;
+        color: #888888;
+      }
 
     </style>
+    <script src="/static/js/jquery-1.11.2.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">新工作经历</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="control-label">所在公司</label>
+            <input type="text" class="form-control" id="recipient-company">
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="control-label">职位</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>          
+          <div class="form-group">
+            <label for="message-text" class="control-label">起至日期</label>
+            <div class="row">
+  <div class="col-lg-6">
+    
+      
+      <input type="text" class="form-control" placeholder="开始时间，如2011年10月1日">
+    
+  </div><!-- /.col-lg-6 -->
+  <div class="col-lg-6">
+    
+      <input type="text" class="form-control" placeholder="结束时间，同上">
+      
+    
+  </div><!-- /.col-lg-6 -->
+</div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">添加</button>
+      </div>
+    </div>
+  </div>
+</div>
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -93,28 +150,117 @@
 </nav>
 
 <div id="main_container" class="container">
-	<div class="row">
+	<h4>个人简历设置</h4>
+  <hr class="divider">
+  <div class="row">
 		<div class="col-md-3">
-			<div class="panel panel-default">
-				<div class="panel-heading">个人设置</div>
-				<div id ="profile_item" class="panel-body">
-					<div id ="pro_list" class="list-group">
-						<a href="#" class="list-group-item active">
-    Cras justo odio
-  </a>
-  <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-  <a href="#" class="list-group-item">Morbi leo risus</a>
-  <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-  <a href="#" class="list-group-item">Vestibulum at eros</a>
+					<div class="list-group">
+						<a href="#" id="basic-item" class="list-group-item active">基本设置</a>
+            <a href="#" id="work-item" class="list-group-item">工作经历</a>
+            <a href="#" id="edu" class="list-group-item">教育经历</a>
+            <a href="#" id="contact" class="list-group-item">联系方式</a>
+            <a href="#" id="skill" class="list-group-item">特长技能</a>
 					</div>
-				</div>
-			</div>
-
-
-
-
+				
 		</div>
-	</div>
+    
+    <!--<div class="col-md-9">
+        <div class="panel panel-default">
+          <div class="panel-heading">工作经历</div>
+          <div class="panel-body">
+          <button id="addwork" type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">添加工作经历</button>
+          <hr class="divider">  
+            {% for item in workexprences %}
+              <p><strong>{{item.4}}</strong></p>
+              <p><a href="">{{ item.3 }}</a></p>
+              <p>从{{ item.1 }}到{{ item.2 }}</p>
+              <hr class="divider">
+            {% endfor %}
+          </div>
+        
+    </div>
+    </div>-->
+    <script type="text/javascript">
+        $('#basic-item').click(function(){
+          $('.active').removeClass('active');
+          $(this).addClass("active");
+          var box = $('<div class="col-md-9"><div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">基本信息</h3></div><div class="panel-body"><strong>个人头像</strong><p><img src="{{pic}}" id="picture" class="img-rounded dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"></img><form action = "/save_basic/" method ="POST"><span id="photo" class="btn btn-info fileinput-button" style="margin-left:14px"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span><span>上传图片</span><input type="file" id="upload_image" data-url="/upload/" name="up_image" multiple></span><strong>姓名</strong><div class="form-group" style="margin-top:10px"><input type="text" name ="keyword" style="width:300px" class="form-control"></div><strong>状态</strong><div class="form-group" style="margin-top:10px"><input type="text" name ="status" style="width:300px" class="form-control"></div><strong>主页地址</strong><div class="form-group" style="margin-top:10px"><input type="text" name ="keyword" style="width:300px" class="form-control"></div><strong>地址</strong><div class="form-group" style="margin-top:10px"><input type="text" name ="address" style="width:300px" class="form-control"></div><strong>当前工作</strong><div class="form-group" style="margin-top:10px"><input type="text" name ="cur_work" style="width:300px" class="form-control"></div><button type="submit" class="btn btn-success">保存设置</button></form></div></div>');
+            $('.col-md-9').replaceWith(box);            
+        });
+
+        $('#work-item').click(function(){
+          $('.active').removeClass('active');
+          $(this).addClass("active");
+          var box = $('<div class="col-md-9"><div class="panel panel-default"><div class="panel-heading">工作经历</div><div class="panel-body"><button id="addwork" type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">添加工作经历</button><hr class="divider">{% for item in workexprences %}<p><strong>{{item.4}}</strong></p><p><a href="">{{ item.3 }}</a></p><p>从{{ item.1 }}到{{ item.2 }}</p><hr class="divider">{% endfor %}</div></div></div>');
+          $('.col-md-9').replaceWith(box); 
+        });
+
+        $('#edu').click(function(){
+          $('.active').removeClass('active');
+          $(this).addClass("active");
+          var box = $('<div class="col-md-9"><div class="panel panel-default"><div class="panel-heading">教育经历</div><div class="panel-body"><button id="addwork" type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal1">添加教育经历</button><hr class="divider">{% for item in eduexprences %}<p><strong>{{ item.4 }}</strong> {{item.6}}</p><p><a href="">{{ item.3 }}</a></p><p>从{{ item.1 }}到{{ item.2 }}</p><hr class="divider">{% endfor %}</div></div></div>');
+          $('.col-md-9').replaceWith(box); 
+        });
+
+        $('#contact').click(function(){
+          $('.active').removeClass('active');
+          $(this).addClass("active");
+          var box = $('<div class="col-md-9"><div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">联系方式</h3></div><div class="panel-body"><form action = "/addcontact/" method="POST"><strong>邮箱</strong><div class="form-group" style="margin-top:10px"><input type="text" name ="keyword" style="width:300px" class="form-control"></div><strong>手机</strong><div class="form-group" style="margin-top:10px"><input type="text" name ="keyword" style="width:300px" class="form-control"></div><strong>微信</strong><div class="form-group" style="margin-top:10px"><input type="text" name ="keyword" style="width:300px" class="form-control"></div><strong>QQ</strong><div class="form-group" style="margin-top:10px"><input type="text" name ="keyword" style="width:300px" class="form-control"></div><strong>新浪微博</strong><div class="form-group" style="margin-top:10px"><input type="text" name ="keyword" style="width:300px" class="form-control"></div><button type="button" class="btn btn-success">保存设置</button></form></div></div></div>');
+          $('.col-md-9').replaceWith(box);           
+        });
+
+        $('#skill').click(function(){
+          $('.active').removeClass('active');
+          $(this).addClass("active");
+          var box = $('<div class="col-md-9"><div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">标签</h3></div><div id="tags" class="panel-body"><p>您没有添加任何标签</p><a href="">立即添加</a></div></div></div>');
+          $('.col-md-9').replaceWith(box);           
+        });        
+
+    </script>
+<div class="col-md-9">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+              <h3 class="panel-title">基本信息</h3>
+          </div>
+          <div class="panel-body">
+          <form action="/save_basic/" method="POST" enctype="multipart/form-data">
+              <strong>个人头像</strong>
+              <p><img src="{{pic}}" id="picture" class="img-rounded dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"></img>
+
+                    <span id="photo" class="btn btn-info fileinput-button" style="margin-left:14px">
+                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                            <span>上传图片</span>
+                                  <input type="file" id="upload_image" data-url="/upload/" name="update_pic" multiple>
+                        </span>
+                <hr class="divider">              
+                <p><strong>姓名</strong></p>
+                    <div class="form-group" style="margin-top:10px">
+                        <input type="text" name ="keyword" style="width:300px" class="form-control">
+                    </div> 
+                <strong>状态</strong>
+                    <div class="form-group" style="margin-top:10px">
+                        <input type="text" name ="status" style="width:300px" class="form-control">
+                    </div>
+                <strong>主页地址</strong>
+                    <div class="form-group" style="margin-top:10px">
+                        <input type="text" name ="keyword" style="width:300px" class="form-control">
+                    </div>
+                <strong>地址</strong>
+                    <div class="form-group" style="margin-top:10px">
+                        <input type="text" name ="address" style="width:300px" class="form-control">
+                    </div>
+                <strong>当前工作</strong>
+                    <div class="form-group" style="margin-top:10px">
+                        <input type="text" name ="cur_work" style="width:300px" class="form-control">
+                    </div>                
+                <button type="submit" class="btn btn-success">保存设置</button>                                   
+              </form>
+          </div>
+    </div>
+</div>
+
+
+
 
 </div>
 </body>

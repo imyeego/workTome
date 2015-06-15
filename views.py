@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# _*_ coding:utf-8 _*_
+
 from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext,Context
@@ -53,8 +56,8 @@ def index(request):
 		pic = get_user_pic(username)
 		topics = gettopics()
 		recommends = getrecommends(username)
-		followings = getfollowings(username)
-		followers = getfollowers(username)
+		followings = getfollowings(username)+1
+		followers = getfollowers(username)+1
 		messenages = getmessenages(username)+1
 		cur_time = int(time.time())
 
@@ -90,18 +93,7 @@ def send_messenge(request):
 
 		return HttpResponseRedirect('/index/')
 
-
-def upload(request):
-	if request.method == "POST":
-		file_obj = request.FILES.get('up_image',None)
-		fname = file_obj.name
-		fp = file('/templates/images/'+ file_obj.name, 'wb+')
-		s = file_obj.read()
-		fp.write(s)
-		fp.close()
-
-		return json.dumps({"files":[{"name":fname}]})
-
+#注册，点注册按钮触发
 def join(request):
 	if request.method == "POST":
 		username = request.POST['username']
@@ -119,7 +111,7 @@ def join(request):
 			t = get_template('signup.html')
 			c = Context({'count1':count1,'count2':count2})
 			return HttpResponse(t.render(c))
-
+#个人主页
 def profile(request):
 	username = request.COOKIES.get('username','')
 	if username:
@@ -135,7 +127,7 @@ def profile(request):
 		return render_to_response('profile.html',{'eduexprences':eduexprences,'workexprences':workexprences,'followings':followings,'followers':followers,'pic': pic[0][0],'username':username,'result':result,'messages':messages},context_instance=RequestContext(request))
 	else:
 		return HttpResponseRedirect('/login/')
-
+#赞
 def like(request):
 	username = request.COOKIES.get('username','')
 	if username:
@@ -149,7 +141,7 @@ def like(request):
 
 	else:
 		return HttpResponseRedirect('/login/')
-
+#添加关注
 def follow(request):
 	username = request.COOKIES.get('username','')
 	if username:
@@ -161,12 +153,12 @@ def follow(request):
 		return HttpResponse(t.render(c))
 	else:
 		return HttpResponseRedirect('/login/')
-
+#搜索
 def search(request):
 	username = request.COOKIES.get('username','')
 	if username:
-		pic = get_user_pic(username)
-		keyword = request.GET['keyword']
+		pic = get_user_pic(username) #右上角小头像
+		keyword = request.GET['keyword'] 
 		per_count,person = search_person(keyword)
 		com_count,company = search_company(keyword)
 		top_count,topic = search_topic(keyword)
@@ -178,16 +170,20 @@ def search(request):
 	else:
 		return HttpResponseRedirect('/login/')
 
+#设置
 def setting(request):
 	username = request.COOKIES.get('username','')
 	if username:
 		pic = get_user_pic(username)
+		workexprences = getwork_exprencebyusername(username)
+		eduexprences = getedu_exprencebyusername(username)
 		t = get_template('settings.html')
-		c = Context({'pic':pic[0][0],'username':username})
+		c = Context({'pic':pic[0][0],'username':username,'workexprences':workexprences,'eduexprences':eduexprences})
 		return HttpResponse(t.render(c))
 	else:
 		return HttpResponseRedirect('/login/')
 	 
+#主动向服务器获取好友发布的信息
 def getNewMess(request):
 	username = request.GET['username']
 	if username:
@@ -207,7 +203,111 @@ def current_time(request):
 		return HttpResponse(html)
 	else:
 		 return HttpResponseRedirect('/login/')
+
+def savebasic(request):
+	username = request.COOKIES.get('username','')
+	file_obj = request.FILES.get('update_pic', None)
+	if username:
 		
+		sign = request.POST['status']
+		address = request.POST['address']
+		cur_work = request.POST['cur_work']
+		if file_obj:
+			fname = file_obj.name
+			fp = file(os.getcwd()+'/workTome/templates/images/'+ fname, 'wb')
+			s = file_obj.read()
+			fp.write(s)
+			fp.close()
+			
+			updatebasicByPic(username,fname)
+		else:
+			updatebasic(username,cur_work,address,sign)
+		return HttpResponseRedirect('/setting/')
+
+	else:
+		return HttpResponseRedirect('/login/')
+#发私信
+def send_dire_messen(request):
+	username = request.COOKIES.get('username','')
+	if username:
+		receiver = request.POST['recipient-name']
+		content = request.POST['message-text']
+		cur_time = int(time.time())
+
+		new_dire_messen(username,receiver,content,cur_time)
+		return HttpResponseRedirect('/index/')
+	else:
+		return HttpResponseRedirect('/login/')
+
+#私信列表获取
+def direct_messen(request):
+	username = request.COOKIES.get('username','')
+	if username:
+		
+		result = getnewdirect_messen(username)
+		pic = get_user_pic(username)
+
+		return render_to_response('direct_messenge.html',{'result':result,'username': username,'pic':pic[0][0]},context_instance=RequestContext(request))
+	else:
+		return HttpResponseRedirect('/login/')
+
+#私信设为已读
+def readed(request):
+	username = request.COOKIES.get('username','')
+	if username:
+		meid = request.POST['itemid']
+		readedById(meid)
+		t = get_template('current_datetime.html')
+		c = Context({'username',username})
+		return HttpResponse(t.render(c))
+
+	else:
+		return HttpResponseRedirect('/login/')
+
+def getUnreadDire(request):
+	username = request.GET['uname']
+	if username:
+		count = getUnreadByUname(username)
+		t = get_template('main.html')
+		c = Context({'count_newdire',count})
+		return HttpResponse(t.render(c))
+	else:
+		return HttpResponseRedirect('/login/')
+
+def activity(request):
+	username = request.COOKIES.get('username','')
+	if username:
+		followings = getfollowingsByDetails(username)
+		followers = getfollowersByDetails(username)
+
+		t = get_template('activity.html')
+		c = Context({'username':username,'followings':followings,'followers':followers})
+		return HttpResponse(t.render(c))
+	else:
+		return HttpResponseRedirect('/login/')
+
+def quit(request):
+	username = request.COOKIES.get('username','')
+	if username:
+		frid = request.POST['friid']
+		delfrid(frid)
+		t = get_template('activity.html')
+		c = Context({'username',username})
+		return HttpResponse(t.render(c))
+	else:
+		return HttpResponseRedirect('/login/')
+
+def addstar(request):
+	username = request.COOKIES.get('username','')
+	if username:
+		mid = request.POST['mid']
+		insert_star(username,mid,int(time.time()))
+
+		t = get_template('main.html')
+		c = Context({'username',username})
+		return HttpResponse(t.render(c))
+	else:
+		return HttpResponseRedirect('/login/')
 
 
 

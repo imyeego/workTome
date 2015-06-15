@@ -151,7 +151,7 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <script type="text/javascript">
           $(function(){
-                timeid = window.setInterval("getNewMess()",3000);
+                //timeid = window.setInterval("getNewDirect()",3000);
           });
           function getNewMess(){
               $.post('/getNewMess/',{username:{{username}}},function(){
@@ -164,9 +164,20 @@
 
               });  
           }
+          function getNewDirect(){
+            $.post('/getUnreadDire/'{uname:{{username}}},function(){
+              var newdire = {{count_newdire}};
+              newdire1 = Number(newdire);
+              if (newdire1>0) {
+                  var box = $('<div class="alert alert-info" role="alert">您有{{count_newdire}}条未读私信，<a href="#" class="alert-link">点击这里加载</a></div>');
+                  $('#send_messenger').append(box);                     
+              }
+            });
+          }
             
       
     </script>
+          
   </head>
   <body>
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -177,20 +188,21 @@
         <h4 class="modal-title" id="exampleModalLabel">新私信</h4>
       </div>
       <div class="modal-body">
-        <form>
+        <form action = "/send_dire_messen/" method="POST">
           <div class="form-group">
             <label for="recipient-name" class="control-label">想给谁发私信</label>
-            <input type="text" class="form-control" id="recipient-name">
+            <input type="text" class="form-control" name="recipient-name">
           </div>
           <div class="form-group">
             <label for="message-text" class="control-label">信息</label>
-            <textarea class="form-control" id="message-text"></textarea>
+            <textarea class="form-control" name="message-text"></textarea>
           </div>
-        </form>
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">发送</button>
+        <button type="submit" class="btn btn-primary">发送</button>
+        </form>
       </div>
     </div>
   </div>
@@ -222,7 +234,7 @@
       </li>
         <li class="active"><a href="#">首页 <span class="sr-only">(current)</span></a></li>
         <li><a href="#">发现</a></li>
-        <li><a href="#">专栏</a></li>
+        <li><a href="http://127.0.0.1:8000/profile/">简历</a></li>
         <li><a href="#" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">私信</a></li>
 
       </ul>
@@ -234,7 +246,7 @@
           <ul class="dropdown-menu" role="menu">
             <li><a href="http://127.0.0.1:8000/profile/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> &nbsp&nbsp   主页</a></li>
             <li><a href="#"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> &nbsp&nbsp     收藏</a></li>
-            <li><a href="#"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> &nbsp&nbsp     私信</a></li>
+            <li><a href="http://127.0.0.1:8000/direct_messen/"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> &nbsp&nbsp     私信</a></li>
             <li class="divider"></li>
             <li><a href="http://127.0.0.1:8000/setting/"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> &nbsp&nbsp     设置</a></li>
             <li><a href="http://127.0.0.1:8000/login/"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> &nbsp&nbsp     退出</a></li>
@@ -256,15 +268,15 @@
                   <div class="row">
                 <div id="followings" class = "col-md-4">
                   <p>正在关注</p>
-                  <p><a href="">{{followings}}</a></p>
+                  <p><a href="http://127.0.0.1:8000/activity/">{{followings}}</a></p>
                 </div>
                 <div d="followers" class = "col-md-4">
                   <p>关注者</p>
-                  <p><a href="">{{followers}}</a></p>
+                  <p><a href="http://127.0.0.1:8000/activity/">{{followers}}</a></p>
                 </div>
                 <div d="followers" class = "col-md-4">
                   <p>已发消息</p>
-                  <p><a href="">{{messenages}}</a></p>
+                  <p><a href="http://127.0.0.1:8000/activity/">{{messenages}}</a></p>
                 </div>
 
                     
@@ -321,7 +333,7 @@
           </div>
           <script type="text/javascript">
           
-           var timeid = window.setInterval("getNewMess()",3000);
+           var timeid = window.setInterval("getNewDirect()",3000);
           
           function getNewMess(){
               $.get('/getNewMess/',{username:'{{username}}'},function(){
@@ -333,6 +345,17 @@
               }
 
               });  
+          }
+
+          function getNewDirect(){
+            $.get('/getUnreadDire/',{uname:'{{username}}'},function(){
+              newdire = Number({{count_newdire}});
+              
+              if (newdire>0) {
+                  var box = $('<div class="alert alert-info" role="alert">您有{{count_newdire}}条未读私信，<a href="#" class="alert-link">点击这里加载</a></div>');
+                  $('#send_messenger').append(box);                     
+              }
+            });
           }
             
       

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{username}}_私信</title>
+
+	<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/jquery.fileupload.css" rel="stylesheet">
+    <link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
+
+    <style type="text/css">
+     body{
+     	padding-top: 70px;
+     }
+
+     #pic{
+        width: 25px;
+        height: 25px;
+        margin-top: 13px;
+        }
+        #picture{
+          width: 100px;
+          height: 100px;
+        }
+      .container{
+        width: 75%;
+        margin-left: 10.5%;
+      }
+
+
+      .caret{
+        margin-top: 12px;
+        margin-left: 3px;
+      }
+      .img-rounded{
+        background-color: #EDEDED;
+        width: 39px;
+        height: 39px;
+    }
+    .btn_small_reply{
+    	border: 0px;
+    }
+
+    </style>
+    <script src="/static/js/jquery-1.11.2.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        
+        
+      </button>
+      <a class="navbar-brand" href="#">Work.me</a>
+      <form class="navbar-form navbar-left" role="search" action="/search/">
+        <div class="form-group">
+          <input type="text" name ="keyword" style="width:300px" class="form-control" placeholder="搜索人脉、公司、消息">
+        </div>
+        <button type="submit" class="btn btn-default">搜索</button>
+      </form>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      
+      <ul class="nav navbar-nav">
+        <li ><a href="http://127.0.0.1:8000/index/">首页 </a></li>
+        <li><a href="#">发现</a></li>
+        <li><a href="#">专栏</a></li>
+        <li class="active"><a href="#" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">私信  <span class="sr-only">(current)</span></a></li>
+
+      </ul>
+      
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">消息</a></li>
+        <li class="dropdown">
+          <img src="{{pic}}" id="pic" class="img-rounded dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></img>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="http://127.0.0.1:8000/profile/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> &nbsp&nbsp   主页</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> &nbsp&nbsp     收藏</a></li>
+            <li><a href="http://127.0.0.1:8000/direct_messen/"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> &nbsp&nbsp     私信</a></li>
+            <li class="divider"></li>
+            <li><a href="http://127.0.0.1:8000/setting/"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> &nbsp&nbsp     设置</a></li>
+            <li><a href="http://127.0.0.1:8000/login/"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> &nbsp&nbsp     退出</a></li>
+          </ul>
+        </li>
+        </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div id="main_container" class="container">
+	<h4>我的私信</h4>
+  <hr class="divider">
+  <div class="row">
+		<div class="col-md-9">
+		{% for item in result %}
+			<div class="pers_messens">
+				<div class = "row" id = "messenge_content">
+					<div class = "col-md-1">
+						<a href="#">
+							<img class="img-rounded" src="{{pic}}">
+						</a>
+					</div>
+					<div class = "col-md-11">
+						<p>
+							<strong class = "username">{{item.1}}</strong>
+								<h style="color:#777777;font-size:90%" class = "time{{item.4}}">{{item.4}}</h>
+
+								
+								{% if not item.5 %}
+									<a id="readed{{item.0}}" style="float:right" href="">设为已读</a>
+								{% else %}
+
+								
+									<a id="readed{{item.0}}" style="float:right" href="">已读</a>
+								{% endif %}
+								<a id="reply{{item.0}}" style="float:right;margin-right:15px" href="">回复</a>
+								<a id="delete{{item.0}}" href="" style="float:right;margin-right:15px">删除</a>
+								
+						</p>
+						<p>
+							{{item.3}}
+						</p>
+					</div>
+
+					<script type="text/javascript">
+						$('#readed{{item.0}}').click(function(){
+							$.post('/readed/',{itemid:{{item.0}}},function(){
+								$('#readed{{item.0}}').text("已读")
+								$('#readed{{item.0}}').css("color","#666666");
+							});
+						});
+					</script>
+				</div>
+				
+				<hr class="divider">
+				
+				<script type="text/javascript">
+              		function getLocalTime(ns){
+                		return new Date(parseInt(ns)*1000).toLocaleString().replace(/:\d{1,2}$/,'').replace(/年|月/g, "-").replace(/日/, " ").replace("GMT+8"," ");
+              		}
+              		var time = getLocalTime($('.time{{item.4}}').text());
+              		$('.time{{item.4}}').text(time);
+          		</script>
+
+			</div>			
+
+		{% endfor %}
+		</div>
+
+		<div class="col-md-3">
+          <div class="panel panel-default">
+          <div class="panel-heading">温馨提示</div>
+            <div class="panel-body">
+            	使用私信功能建议您遵守网络文明章程和规范
+            </div>
+           </div>
+          </div>
+
+		</div>
+  </div>
+</div>
+
+</body>
+
+
+
+
+
+
+
+
